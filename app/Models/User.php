@@ -46,4 +46,8 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    protected function store() {
+        return $this->hasMany(Store::class);
+    }
 }
