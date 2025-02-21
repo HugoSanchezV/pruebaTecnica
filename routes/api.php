@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CartItemController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\StoreController;
 use Illuminate\Support\Facades\Route;
@@ -26,3 +27,9 @@ Route::get('/product/find/{product}', [ProductController::class, 'show'])->middl
 Route::post('/product/create/', [ProductController::class, 'store'])->middleware('auth:sanctum', 'is_seller');
 Route::put('/product/update/{product}', [ProductController::class, 'update'])->middleware('auth:sanctum', 'is_seller');
 Route::delete('/product/delete/{product}', [ProductController::class, 'destroy'])->middleware('auth:sanctum', 'is_seller');
+
+// Cuarto modulo - Carrito
+Route::get('/cart/show/', [CartItemController::class, 'index'])->middleware('auth:sanctum', 'is_client');
+
+Route::post('/cart/add/', [CartItemController::class, 'addToCart'])->middleware('auth:sanctum', 'is_client');
+Route::post('/cart/remove/', [CartItemController::class, 'removeFromCart'])->middleware('auth:sanctum', 'is_client');

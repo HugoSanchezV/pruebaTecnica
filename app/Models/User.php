@@ -47,7 +47,11 @@ class User extends Authenticatable
         ];
     }
 
-    protected function stores() {
+    public function stores() {
         return $this->hasMany(Store::class);
+    }
+
+    public function cartItems() {
+        return $this->hasMany(CartItem::class);
     }
 }

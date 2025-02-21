@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\ClientMiddleware;
 use App\Http\Middleware\SellerMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -16,6 +17,10 @@ return Application::configure(basePath: dirname(__DIR__))
         //
         $middleware->alias([
             'is_seller' => SellerMiddleware::class
+        ]);
+
+        $middleware->alias([
+            'is_client' => ClientMiddleware::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
