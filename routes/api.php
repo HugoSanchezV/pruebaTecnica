@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartItemController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\StoreController;
 use Illuminate\Support\Facades\Route;
@@ -36,3 +37,6 @@ Route::post('/cart/remove/', [CartItemController::class, 'removeFromCart'])->mid
 
 // Quinto modulo - Finalizar compra
 Route::post('/cart/pay/', [CartItemController::class, 'payCart'])->middleware('auth:sanctum', 'is_client');
+
+// Sexto modulo - Historial de pagos
+Route::get('/orders', [OrderController::class, 'order'])->middleware('auth:sanctum');
