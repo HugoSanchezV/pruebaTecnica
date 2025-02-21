@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Cart\CartItemRequest;
 use App\Models\CartItem;
+use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CartItemController extends Controller
 {
@@ -71,5 +73,44 @@ class CartItemController extends Controller
         }
 
         return response()->json(['message' => 'Producto removido del carrito']);
+    }
+
+    public function payCart()
+    {
+        try {
+            $user_id = Auth::id();
+
+            DB::transaction(function () use ($user_id) {
+                $cartItems = CartItem::with('product')
+                    ->where('user_id', $user_id)
+                    ->lockForUpdate()
+                    ->get();
+
+
+                foreach ($cartItems as $item) {
+
+                    if ($item->quantity > $item['product']['stock']) {
+                        throw new \Exception("No hay suficiente stock para el producto: " . $item['product']['name']);
+                    }
+
+                    $total = $item->quantity * $item['product']['price'];
+
+                    Order::create([
+                        'product_id' => $item['product']['id'],
+                        'user_id' => $user_id,
+                        'quantity' => $item->quantity,
+                        'total' => $total
+                    ]);
+
+                    $item['product']->decrement('stock', $item->quantity);
+
+                    $item->delete();
+                }
+            });
+
+            return response(["Se ha realiado el pago"], 200);
+        } catch (\Exception $e) {
+            return response(["Error al realizar la operacion {$e->getMessage()}"], 500);
+        }
     }
 }

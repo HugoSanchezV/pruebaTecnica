@@ -33,3 +33,6 @@ Route::get('/cart/show/', [CartItemController::class, 'index'])->middleware('aut
 
 Route::post('/cart/add/', [CartItemController::class, 'addToCart'])->middleware('auth:sanctum', 'is_client');
 Route::post('/cart/remove/', [CartItemController::class, 'removeFromCart'])->middleware('auth:sanctum', 'is_client');
+
+// Quinto modulo - Finalizar compra
+Route::post('/cart/pay/', [CartItemController::class, 'payCart'])->middleware('auth:sanctum', 'is_client');
